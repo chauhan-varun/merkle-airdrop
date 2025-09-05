@@ -5,6 +5,18 @@
       "rev": "8bbcf6e3f8f62f419e5429a0bd89331c85c37824"
     }
   },
+  "lib/murky": {
+    "tag": {
+      "name": "0.0.1",
+      "rev": "5feccd1253d7da820f7cccccdedf64471025455d"
+    }
+  },
+  "lib/foundry-era-contracts": {
+    "tag": {
+      "name": "0.0.3",
+      "rev": "3f99de4a37b126c5cb0466067f37be0c932167b2"
+    }
+  },
   "lib/openzeppelin-contracts": {
     "tag": {
       "name": "v5.4.0",
