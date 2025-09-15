@@ -1,16 +1,4 @@
 {
-  "lib/forge-std": {
-    "tag": {
-      "name": "v1.10.0",
-      "rev": "8bbcf6e3f8f62f419e5429a0bd89331c85c37824"
-    }
-  },
-  "lib/murky": {
-    "tag": {
-      "name": "0.0.1",
-      "rev": "5feccd1253d7da820f7cccccdedf64471025455d"
-    }
-  },
   "lib/foundry-era-contracts": {
     "tag": {
       "name": "0.0.3",
@@ -21,6 +9,24 @@
     "tag": {
       "name": "v5.4.0",
       "rev": "c64a1edb67b6e3f4a15cca8909c9482ad33a02b0"
+    }
+  },
+  "lib/foundry-devops": {
+    "tag": {
+      "name": "0.4.0",
+      "rev": "efff097a87e70c3d15661c9f2a2daeae0b33d5d5"
+    }
+  },
+  "lib/forge-std": {
+    "tag": {
+      "name": "v1.10.0",
+      "rev": "8bbcf6e3f8f62f419e5429a0bd89331c85c37824"
+    }
+  },
+  "lib/murky": {
+    "tag": {
+      "name": "0.0.1",
+      "rev": "5feccd1253d7da820f7cccccdedf64471025455d"
     }
   }
 }
