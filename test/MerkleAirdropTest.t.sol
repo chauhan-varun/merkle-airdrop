@@ -33,7 +33,7 @@ contract MerkleAirdropTest is ZkSyncChainChecker, Test {
             (merkleAirdrop, bagelToken) = deployer.deployMerkleAirdrop();
         } else {
             bagelToken = new BagelToken();
-            merkleAirdrop = new MerkleAirdrop(address(bagelToken), merkleRoot);
+            merkleAirdrop = new MerkleAirdrop(merkleRoot, bagelToken);
             bagelToken.mint(bagelToken.owner(), AMOUNT_TO_SEND);
             bagelToken.transfer(address(merkleAirdrop), AMOUNT_TO_SEND);
         }

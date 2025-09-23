@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import {Script} from "forge-std/Script.sol";
-import {MerkleAirdrop} from "../src/MerkleAirdrop.sol";
+import {Script, console} from "forge-std/Script.sol";
+import {MerkleAirdrop, IERC20} from "../src/MerkleAirdrop.sol";
 import {BagelToken} from "../src/BagelToken.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract DeployMerkleAirdrop is Script {
     bytes32 public constant ROOT =
@@ -19,8 +18,8 @@ contract DeployMerkleAirdrop is Script {
 
         // Deploy MerkleAirdrop with the address of BagelToken and the merkle root
         MerkleAirdrop merkleAirdrop = new MerkleAirdrop(
-            address(bagelToken),
-            ROOT
+            ROOT,
+            bagelToken
         );
         // Mint some tokens to the deployer
         bagelToken.mint(bagelToken.owner(), AMOUNT_TO_SEND);
@@ -32,9 +31,6 @@ contract DeployMerkleAirdrop is Script {
     }
 
     function run() external returns (MerkleAirdrop, BagelToken) {
-        MerkleAirdrop merkleAirdrop;
-        BagelToken bagelToken;
-        (merkleAirdrop, bagelToken) = deployMerkleAirdrop();
-        return (merkleAirdrop, bagelToken);
+        return deployMerkleAirdrop();
     }
 }
