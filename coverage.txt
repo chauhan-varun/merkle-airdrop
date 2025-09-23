@@ -1,0 +1,77 @@
+Compiling 62 files with Solc 0.8.30
+Solc 0.8.30 finished in 4.37s
+Compiler run successful!
+Analysing contracts...
+Running tests...
+
+Ran 21 tests for test/MerkleAirdropTest.t.sol:MerkleAirdropTest
+[PASS] testFuzz_BagelToken_Mint(uint256) (runs: 256, μ: 56010, ~: 55602)
+[PASS] testFuzz_MerkleAirdrop_MessageHash(address,uint256) (runs: 256, μ: 18082, ~: 17578)
+[PASS] test_BagelToken_DeploymentState() (gas: 26437)
+[PASS] test_BagelToken_MintSuccess() (gas: 51680)
+[PASS] test_BagelToken_MintToZeroAddressReverts() (gas: 14330)
+[PASS] test_BagelToken_MintUnauthorizedReverts() (gas: 17201)
+[PASS] test_BagelToken_OwnershipTransfer() (gas: 61986)
+[PASS] test_EdgeCase_EmptyProof() (gas: 29792)
+[PASS] test_EdgeCase_MaxAmount() (gas: 37512)
+[PASS] test_Integration_InsufficientTokenBalance() (gas: 2149366)
+[PASS] test_Integration_MultipleUsersClaiming() (gas: 108301)
+[PASS] test_MerkleAirdrop_ClaimStateTracking() (gas: 104552)
+[PASS] test_MerkleAirdrop_DeploymentState() (gas: 23485)
+[PASS] test_MerkleAirdrop_DoubleClaimReverts() (gas: 98175)
+[PASS] test_MerkleAirdrop_InvalidProofReverts() (gas: 37532)
+[PASS] test_MerkleAirdrop_InvalidSignatureReverts() (gas: 37866)
+[PASS] test_MerkleAirdrop_MalformedSignatureReverts() (gas: 29762)
+[PASS] test_MerkleAirdrop_MessageHashGeneration() (gas: 20617)
+[PASS] test_MerkleAirdrop_SuccessfulClaim() (gas: 106920)
+[PASS] test_MerkleAirdrop_ViewFunctions() (gas: 11515)
+[PASS] test_MerkleAirdrop_WrongAmountReverts() (gas: 37521)
+Suite result: ok. 21 passed; 0 failed; 0 skipped; finished in 69.84ms (142.90ms CPU time)
+
+Ran 25 tests for test/BagelTokenTest.t.sol:BagelTokenTest
+[PASS] testFuzz_Approve_VariousAmountsAndSpenders(address,uint256) (runs: 256, μ: 42316, ~: 42627)
+[PASS] testFuzz_Mint_VariousAmounts(uint256) (runs: 256, μ: 50974, ~: 50737)
+[PASS] testFuzz_Transfer_VariousAmountsAndAddresses(address,uint256) (runs: 256, μ: 55874, ~: 55592)
+[PASS] test_Deployment_InitialState() (gas: 32491)
+[PASS] test_ERC20_ApproveAndTransferFrom() (gas: 66533)
+[PASS] test_ERC20_Transfer() (gas: 53849)
+[PASS] test_ERC20_TransferFromInsufficientAllowance() (gas: 44073)
+[PASS] test_ERC20_TransferInsufficientBalance() (gas: 16827)
+[PASS] test_EdgeCase_MaxApproval() (gas: 78893)
+[PASS] test_EdgeCase_MultipleMintsSameAddress() (gas: 47166)
+[PASS] test_EdgeCase_SelfApprove() (gas: 35772)
+[PASS] test_EdgeCase_SelfTransfer() (gas: 17469)
+[PASS] test_Integration_ComplexScenario() (gas: 107468)
+[PASS] test_Integration_OwnershipTransferWithMinting() (gas: 84142)
+[PASS] test_Invariant_MintingIncreasesTotalSupply() (gas: 43977)
+[PASS] test_Invariant_TotalSupplyConsistency() (gas: 80401)
+[PASS] test_Mint_MaxAmount() (gas: 44769)
+[PASS] test_Mint_RevertWhenMintingToZeroAddress() (gas: 11708)
+[PASS] test_Mint_RevertWhenNotOwner() (gas: 17262)
+[PASS] test_Mint_SuccessfulByOwner() (gas: 52151)
+[PASS] test_Mint_ZeroAmount() (gas: 23836)
+[PASS] test_Ownership_NewOwnerCanMintAfterTransfer() (gas: 53776)
+[PASS] test_Ownership_OldOwnerCannotMintAfterTransfer() (gas: 25110)
+[PASS] test_Ownership_Renounce() (gas: 18990)
+[PASS] test_Ownership_TransferProcess() (gas: 16782)
+Suite result: ok. 25 passed; 0 failed; 0 skipped; finished in 86.76ms (198.69ms CPU time)
+
+Ran 2 test suites in 88.68ms (156.60ms CPU time): 46 tests passed, 0 failed, 0 skipped (46 total tests)
+
+╭----------------------------------+-----------------+-----------------+---------------+---------------╮
+| File                             | % Lines         | % Statements    | % Branches    | % Funcs       |
++======================================================================================================+
+| script/DeployMerkleAirdrop.s.sol | 80.00% (8/10)   | 81.82% (9/11)   | 100.00% (0/0) | 50.00% (1/2)  |
+|----------------------------------+-----------------+-----------------+---------------+---------------|
+| script/GenerateInput.s.sol       | 0.00% (0/21)    | 0.00% (0/26)    | 0.00% (0/2)   | 0.00% (0/2)   |
+|----------------------------------+-----------------+-----------------+---------------+---------------|
+| script/Interactions.s.sol        | 0.00% (0/16)    | 0.00% (0/15)    | 0.00% (0/1)   | 0.00% (0/3)   |
+|----------------------------------+-----------------+-----------------+---------------+---------------|
+| script/MakeMerkle.s.sol          | 0.00% (0/30)    | 0.00% (0/42)    | 0.00% (0/3)   | 0.00% (0/3)   |
+|----------------------------------+-----------------+-----------------+---------------+---------------|
+| src/BagelToken.sol               | 100.00% (2/2)   | 100.00% (1/1)   | 100.00% (0/0) | 100.00% (1/1) |
+|----------------------------------+-----------------+-----------------+---------------+---------------|
+| src/MerkleAirdrop.sol            | 100.00% (28/28) | 100.00% (20/20) | 100.00% (3/3) | 100.00% (7/7) |
+|----------------------------------+-----------------+-----------------+---------------+---------------|
+| Total                            | 35.51% (38/107) | 26.09% (30/115) | 33.33% (3/9)  | 50.00% (9/18) |
+╰----------------------------------+-----------------+-----------------+---------------+---------------╯
