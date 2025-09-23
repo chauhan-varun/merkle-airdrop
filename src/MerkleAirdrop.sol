@@ -2,6 +2,8 @@
 pragma solidity ^0.8.20;
 import {IERC20, SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {EIP712} from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 
 /**
  * @title MerkleAirdrop
@@ -11,30 +13,30 @@ import {MerkleProof} from "@openzeppelin/contracts/utils/cryptography/MerkleProo
  * The merkle tree is constructed with recipient addresses and their corresponding token amounts
  * Each recipient can only claim once, preventing double-spending attacks
  */
-contract MerkleAirdrop {
+contract MerkleAirdrop is EIP712 {
     using SafeERC20 for IERC20;
 
     /*//////////////////////////////////////////////////////////////
                                  ERRORS
     //////////////////////////////////////////////////////////////*/
-    
+
     /// @notice Thrown when an invalid merkle proof is provided
     error MerkleAirdrop__InvalidProof();
-    
+
     /// @notice Thrown when a recipient attempts to claim tokens more than once
     error MerkleAirdrop__AlreadyClaimed();
 
     /*//////////////////////////////////////////////////////////////
                             STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
-    
+
     /// @notice Array to store all recipient addresses (currently unused but available for future enhancements)
     address[] private recipients;
-    
+
     /// @notice The ERC20 token being distributed in the airdrop
     /// @dev Immutable to save gas and prevent malicious token swapping
     IERC20 private immutable i_airdropToken;
-    
+
     /// @notice The merkle root hash representing the entire distribution tree
     /// @dev Immutable for security - prevents tampering with the distribution
     bytes32 public i_merkleRoot;
@@ -43,10 +45,17 @@ contract MerkleAirdrop {
     /// @dev Prevents double-claiming by the same address
     mapping(address claimer => bool claimed) public s_hasClaimed;
 
+    bytes32 private constant MESSSAGE_HASH =
+        keccak256("AirdropClaim(address account,uint256 amount)");
+    struct AirdropClaim {
+        address account;
+        uint256 amount;
+    }
+
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
-    
+
     /// @notice Emitted when a recipient successfully claims their airdrop tokens
     /// @param recipient The address that claimed the tokens
     /// @param amount The amount of tokens claimed
@@ -55,14 +64,17 @@ contract MerkleAirdrop {
     /*//////////////////////////////////////////////////////////////
                                CONSTRUCTOR
     //////////////////////////////////////////////////////////////*/
-    
+
     /**
      * @notice Initializes the airdrop contract with the token and merkle root
      * @param airdropToken The address of the ERC20 token to be distributed
      * @param merkleRoot The root hash of the merkle tree containing all eligible recipients and amounts
      * @dev The contract should be funded with sufficient tokens after deployment
      */
-    constructor(address airdropToken, bytes32 merkleRoot) {
+    constructor(
+        address airdropToken,
+        bytes32 merkleRoot
+    ) EIP712("MerkleAirdrop", "1") {
         i_airdropToken = IERC20(airdropToken);
         i_merkleRoot = merkleRoot;
     }
@@ -70,7 +82,7 @@ contract MerkleAirdrop {
     /*//////////////////////////////////////////////////////////////
                             EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    
+
     /**
      * @notice Allows eligible recipients to claim their airdrop tokens
      * @param recipient The address of the recipient claiming tokens
@@ -78,23 +90,37 @@ contract MerkleAirdrop {
      * @param proof The merkle proof demonstrating the recipient's eligibility
      * @dev The leaf is constructed by double-hashing the recipient address and amount
      * @dev Uses SafeERC20 for secure token transfers
-     * 
+     *
      * Requirements:
      * - The recipient must not have already claimed
      * - The merkle proof must be valid for the given recipient and amount
      * - The contract must have sufficient token balance
-     * 
+     *
      * Emits a {Claimed} event upon successful claim
      */
     function claim(
         address recipient,
         uint256 amount,
-        bytes32[] calldata proof
+        bytes32[] calldata proof,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
     ) external {
         if (s_hasClaimed[recipient]) {
             revert MerkleAirdrop__AlreadyClaimed();
         }
 
+        if (
+            !_isValidSignature(
+                recipient,
+                getMessageHash(recipient, amount),
+                v,
+                r,
+                s
+            )
+        ) {
+            revert MerkleAirdrop__InvalidProof();
+        }
         // Create leaf node by double-hashing recipient and amount
         // This prevents second preimage attacks
         bytes32 leaf = keccak256(
@@ -107,18 +133,34 @@ contract MerkleAirdrop {
 
         // Mark as claimed to prevent re-entry
         s_hasClaimed[recipient] = true;
-        
+
         // Emit event before external call for CEI pattern
         emit Claimed(recipient, amount);
-        
+
         // Transfer tokens using SafeERC20
         i_airdropToken.safeTransfer(recipient, amount);
     }
 
     /*//////////////////////////////////////////////////////////////
+                             INTERNAL FUNCTIONS
+    //////////////////////////////////////////////////////////////*/
+
+    function _isValidSignature(
+        address signer,
+        bytes32 messageHash,
+        uint8 v,
+        bytes32 r,
+        bytes32 s
+    ) internal pure returns (bool) {
+        (address recoveredSigner, , ) = ECDSA.tryRecover(messageHash, v, r, s);
+
+        return (recoveredSigner == signer);
+    }
+
+    /*//////////////////////////////////////////////////////////////
                              VIEW FUNCTIONS
     //////////////////////////////////////////////////////////////*/
-    
+
     /**
      * @notice Returns the address of the token being distributed
      * @return The address of the ERC20 airdrop token
@@ -133,5 +175,17 @@ contract MerkleAirdrop {
      */
     function getMerkleRoot() external view returns (bytes32) {
         return i_merkleRoot;
+    }
+
+    function getMessageHash(
+        address account,
+        uint256 amount
+    ) public view returns (bytes32) {
+        return
+            _hashTypedDataV4(
+                keccak256(
+                    abi.encode(MESSSAGE_HASH, AirdropClaim(account, amount))
+                )
+            );
     }
 }

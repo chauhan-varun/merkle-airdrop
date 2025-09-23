@@ -12,6 +12,7 @@ import {DeployMerkleAirdrop} from "../script/DeployMerkleAirdrop.s.sol";
 contract MerkleAirdropTest is ZkSyncChainChecker, Test {
     MerkleAirdrop public merkleAirdrop;
     BagelToken public bagelToken;
+    address public gasPayer;
     address public user;
     uint256 public privateKey;
     bytes32 proof1 =
@@ -37,14 +38,18 @@ contract MerkleAirdropTest is ZkSyncChainChecker, Test {
             bagelToken.transfer(address(merkleAirdrop), AMOUNT_TO_SEND);
         }
         (user, privateKey) = makeAddrAndKey("user");
+        gasPayer = makeAddr("gasPayer");
     }
 
     function testUserClaim() public {
         uint256 userBalanceBefore = bagelToken.balanceOf(user);
         console2.log("User balance before claim:", userBalanceBefore / 1e18);
+        bytes32 digest = merkleAirdrop.getMessageHash(user, AMOUNT_TO_CLAIM);
 
-        vm.prank(user);
-        merkleAirdrop.claim(user, AMOUNT_TO_CLAIM, PROOF);
+        (uint8 v, bytes32 r, bytes32 s) = vm.sign(privateKey, digest);
+
+        vm.prank(gasPayer);
+        merkleAirdrop.claim(user, AMOUNT_TO_CLAIM, PROOF, v, r, s);
         uint256 userBalanceAfter = bagelToken.balanceOf(user);
         console2.log("User balance after claim:", userBalanceAfter / 1e18);
         assert(userBalanceAfter - userBalanceBefore == AMOUNT_TO_CLAIM);
