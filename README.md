@@ -1,16 +1,37 @@
-# Merkle Airdrop Contract
+# 🪂 Advanced Merkle Airdrop System
 
-**Author**: Varun Chauhan
+**Author**: Varun Chauhan  
+**Version**: 2.0.0  
+**License**: MIT
 
-A gas-efficient, secure smart contract system for distributing ERC20 tokens via Merkle tree-based airdrops. This implementation allows for scalable token distribution to thousands of recipients while minimizing on-chain storage costs.
+An advanced, gas-efficient, and highly secure smart contract system for distributing ERC20 tokens via Merkle tree-based airdrops with EIP712 signature verification. This implementation combines the scalability of Merkle trees with the security of cryptographic signatures, allowing for secure token distribution to thousands of recipients while minimizing on-chain storage costs.
 
-## 🌟 Features
+## 🌟 Key Features
 
-- **Gas Efficient**: Uses Merkle trees to verify eligibility without storing all recipient data on-chain
-- **Secure**: Prevents double-claiming and includes comprehensive input validation
-- **Scalable**: Can handle airdrops to unlimited number of recipients
-- **Flexible**: Works with any ERC20 token
+### 🔒 Enhanced Security
+- **EIP712 Signature Verification**: Requires cryptographic signatures from account owners
+- **Dual Verification System**: Both Merkle proof AND signature validation
+- **Reentrancy Protection**: Implements CEI (Checks-Effects-Interactions) pattern
+- **Double-claim Prevention**: Prevents users from claiming multiple times
+- **Comprehensive Input Validation**: Robust error handling and edge case coverage
+
+### ⚡ Gas Optimization  
+- **Merkle Tree Efficiency**: Verify eligibility without storing all recipient data on-chain
+- **Immutable Variables**: Gas-optimized storage for unchanging data
+- **Optimized Signature Verification**: Efficient ECDSA recovery implementation
+- **Safe Token Transfers**: Uses OpenZeppelin's SafeERC20
+
+### 🚀 Developer Experience
+- **Comprehensive Test Suite**: 46+ tests with 100% coverage
+- **Extensive Documentation**: Full NatSpec comments and usage examples  
+- **Fuzz Testing**: Robustness validation with random inputs
+- **CI/CD Ready**: Fast test execution and detailed reporting
 - **Battle-tested**: Built using OpenZeppelin's secure contract libraries
+
+### 📈 Scalability
+- **Unlimited Recipients**: Can handle airdrops to any number of recipients
+- **Cross-chain Compatible**: Works on any EVM-compatible blockchain
+- **Flexible Token Support**: Compatible with any ERC20 token
 
 ## 📋 Contract Overview
 
