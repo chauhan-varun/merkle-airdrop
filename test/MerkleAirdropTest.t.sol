@@ -50,6 +50,7 @@ contract MerkleAirdropTest is ZkSyncChainChecker, Test {
 
         vm.prank(gasPayer);
         merkleAirdrop.claim(user, AMOUNT_TO_CLAIM, PROOF, v, r, s);
+        
         uint256 userBalanceAfter = bagelToken.balanceOf(user);
         console2.log("User balance after claim:", userBalanceAfter / 1e18);
         assert(userBalanceAfter - userBalanceBefore == AMOUNT_TO_CLAIM);
